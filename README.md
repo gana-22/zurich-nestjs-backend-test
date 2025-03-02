@@ -1,6 +1,24 @@
-# zurich-nestjs-backend-test
+# Zurich Backend API
 
 This is a NestJS API for Zurich Malaysia's motor insurance website. The API allows users to obtain insurance premiums based on the vehicle's location and product code. It also includes administrative functionalities to maintain products and prices.
+
+
+## Features
+-   List all the products based on the product code and/or location.
+-   Create new product based on the request body.
+-   Update the product's price and/or location based on the product code.
+-   Delete the product based on the product code.
+
+
+## Technologies Used
+-   NestJS
+-   TypeScript
+-   TypeORM
+-   PostgreSQL
+-   Jest
+-   ESLint & Prettier
+-   Docker
+
 
 ## Installation
 
