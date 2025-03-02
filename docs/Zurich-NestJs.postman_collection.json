@@ -1,0 +1,1493 @@
+{
+	"info": {
+		"_postman_id": "920005ee-705b-43c9-8c57-6d8a00923e41",
+		"name": "Zurich-NestJs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42735604"
+	},
+	"item": [
+		{
+			"name": "CREATE Product",
+			"item": [
+				{
+					"name": "Successful Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(jsonData).to.have.property(\"productDescription\", \"Sedan\");",
+									"    pm.expect(jsonData).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(jsonData).to.have.property(\"price\", \"250.00\");",
+									"    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": \"250.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:3000/product\" -H \"Content-Type: application/json\" -H \"user-role: admin\" -d '{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"West Malaysia\",\n  \"price\": 300.00\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Forbidden resource' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Forbidden resource\");",
+									"    pm.expect(jsonData.error).to.eql(\"Forbidden\");",
+									"    pm.expect(jsonData.statusCode).to.eql(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": \"250.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Decimal for Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_code\", \"1000\");",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(message.target).to.have.property(\"price\", \"600.033\");",
+									"    pm.expect(message).to.have.property(\"value\", \"600.033\");",
+									"    pm.expect(message).to.have.property(\"property\", \"price\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isDecimal\", \"price is not a valid decimal number.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": \"600.033\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Value for Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_code\", \"1000\");",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(message.target).to.have.property(\"price\", 600.033);",
+									"    pm.expect(message).to.have.property(\"value\", 600.033);",
+									"    pm.expect(message).to.have.property(\"property\", \"price\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isDecimal\", \"price is not a valid decimal number.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": 600.033\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Mandatory Param of ProductCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(message.target).to.have.property(\"price\", \"600.03\");",
+									"    pm.expect(message).to.have.property(\"property\", \"product_code\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isNotEmpty\", \"product_code should not be empty\");",
+									"    pm.expect(message.constraints).to.have.property(\"isString\", \"product_code must be a string\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": \"600.03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MIssing Mandatory Param of location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_code\", \"1000\");",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"price\", \"600.03\");",
+									"    pm.expect(message).to.have.property(\"property\", \"location\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isNotEmpty\", \"location should not be empty\");",
+									"    pm.expect(message.constraints).to.have.property(\"isString\", \"location must be a string\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"price\": \"600.03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Mandatory Param of Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_code\", \"1000\");",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(message).to.have.property(\"property\", \"price\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isNotEmpty\", \"price should not be empty\");",
+									"    pm.expect(message.constraints).to.have.property(\"isDecimal\", \"price is not a valid decimal number.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Value for ProductCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"product_code\", 1000);",
+									"    pm.expect(message.target).to.have.property(\"product_description\", \"Sedan\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(message.target).to.have.property(\"price\", \"600.03\");",
+									"    pm.expect(message).to.have.property(\"value\", 1000);",
+									"    pm.expect(message).to.have.property(\"property\", \"product_code\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isString\", \"product_code must be a string\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": 1000,\n  \"productDescription\": \"Sedan\",\n  \"location\": \"East Malaysia\",\n  \"price\": \"600.03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Request Without product Description",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(jsonData).to.have.property(\"productDescription\", null);",
+									"    pm.expect(jsonData).to.have.property(\"location\", \"West Malaysia\");",
+									"    pm.expect(jsonData).to.have.property(\"price\", \"350.00\");",
+									"    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"1000\",\n  \"location\": \"West Malaysia\",\n  \"price\": \"350.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET Product",
+			"item": [
+				{
+					"name": "Successful Request by productCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array with correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;",
+									"",
+									"    var product1 = jsonData[0];",
+									"    pm.expect(product1).to.have.property(\"id\").that.is.a(\"number\");",
+									"    pm.expect(product1).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(product1).to.have.property(\"productDescription\", \"Sedan\");",
+									"    pm.expect(product1).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(product1).to.have.property(\"price\", \"250.00\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Request by location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array with correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;",
+									"",
+									"    var product1 = jsonData[0];",
+									"    pm.expect(product1).to.have.property(\"id\").that.is.a(\"number\");",
+									"    pm.expect(product1).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(product1).to.have.property(\"productDescription\", \"Sedan\");",
+									"    pm.expect(product1).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(product1).to.have.property(\"price\", \"250.00\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/product?location=East%20Malaysia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "East%20Malaysia"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Request by productCode and location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array with correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;",
+									"",
+									"    var product1 = jsonData[0];",
+									"    pm.expect(product1).to.have.property(\"id\").that.is.a(\"number\");",
+									"    pm.expect(product1).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(product1).to.have.property(\"productDescription\", \"Sedan\");",
+									"    pm.expect(product1).to.have.property(\"location\", \"East Malaysia\");",
+									"    pm.expect(product1).to.have.property(\"price\", \"250.00\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000&location=East%20Malaysia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								},
+								{
+									"key": "location",
+									"value": "East%20Malaysia"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Failed Request by Invalid productCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Not Found' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Product is not found\");",
+									"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+									"    pm.expect(jsonData.statusCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=xxx",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Failed Request by Invalid location",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Not Found' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Product is not found\");",
+									"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+									"    pm.expect(jsonData.statusCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/product?location=xxx",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UPDATE Product",
+			"item": [
+				{
+					"name": "Successful Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    var product1 = jsonData[0];",
+									"    pm.expect(product1).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(product1).to.have.property(\"price\", \"50.00\");",
+									"    pm.expect(product1).to.have.property(\"id\").that.is.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": \"50.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Request with location and price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct product details\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    var product1 = jsonData[0];",
+									"    pm.expect(product1).to.have.property(\"productCode\", \"1000\");",
+									"    pm.expect(product1).to.have.property(\"location\", \"Malaysia\");",
+									"    pm.expect(product1).to.have.property(\"price\", \"150.00\");",
+									"    pm.expect(product1).to.have.property(\"id\").that.is.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": \"150.00\",\n  \"location\": \"Malaysia\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Forbidden resource' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Forbidden resource\");",
+									"    pm.expect(jsonData.error).to.eql(\"Forbidden\");",
+									"    pm.expect(jsonData.statusCode).to.eql(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": \"150.00\",\n  \"location\": \"Malaysia\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Price Value",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Bad Request' error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains correct message structure\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.be.an(\"array\").that.is.not.empty;",
+									"    var message = jsonData.message[0];",
+									"    pm.expect(message).to.have.property(\"target\");",
+									"    pm.expect(message.target).to.have.property(\"location\", \"Malaysia\");",
+									"    pm.expect(message.target).to.have.property(\"price\", 150);",
+									"    pm.expect(message).to.have.property(\"value\", 150);",
+									"    pm.expect(message).to.have.property(\"property\", \"price\");",
+									"    pm.expect(message).to.have.property(\"constraints\");",
+									"    pm.expect(message.constraints).to.have.property(\"isDecimal\", \"price is not a valid decimal number.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 150.00,\n  \"location\": \"Malaysia\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non-Exist Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Not Found' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Product with code xxx not found\");",
+									"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+									"    pm.expect(jsonData.statusCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": \"50.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=xxx",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE Product",
+			"item": [
+				{
+					"name": "Invalid Access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Forbidden resource' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Forbidden resource\");",
+									"    pm.expect(jsonData.error).to.eql(\"Forbidden\");",
+									"    pm.expect(jsonData.statusCode).to.eql(403);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "user-role",
+								"value": "admin",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=2000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "2000"
+								}
+							]
+						},
+						"description": "Generated from cURL: curl -X DELETE \"http://localhost:3000/product?productCode=1000\" -H \"user-role: admin\""
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Invalid query parameters' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Invalid query parameters: productCodes\");",
+									"    pm.expect(jsonData.error).to.eql(\"Bad Request\");",
+									"    pm.expect(jsonData.statusCode).to.eql(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/product?productCodes=2000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCodes",
+									"value": "2000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non-Exist Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response contains 'Not Found' message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Product with code xxx not found\");",
+									"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+									"    pm.expect(jsonData.statusCode).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=xxx",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "xxx"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successful Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains success message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Product removed successfully\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "user-role",
+								"value": "admin"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/product?productCode=1000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
